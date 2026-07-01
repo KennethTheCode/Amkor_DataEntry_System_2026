@@ -50,7 +50,7 @@ function EmployeeTable({ employees = null }) {
                     <div className='flex flex-col gap-2'>
                         <p className='text-[12px] font-bold text-gray-500'>ID: {emp.id}</p>
                         <div>
-                            <button className='bg-orange-500 w-full h-[3vh] hover:bg-orange-700 text-white font-bold rounded'>
+                            <button className='bg-orange-500 w-[10vh] h-[3vh] hover:bg-orange-700 text-white font-bold rounded'>
                                 Edit
                             </button>
                         </div>
