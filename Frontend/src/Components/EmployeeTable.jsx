@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import UpdateEmployee from './CRUD/UpdateEmployee';
+import AddFamily from './CRUD/AddFamily';
 
 function EmployeeTable({ employees = null }) {
     const [data, setData] = useState(Array.isArray(employees) ? employees : []);
 
     const sampleData = [
         {
-            id: 'c23-0154-209',
-            firstName: 'Paule Kenneth',
-            middleName: 'Dominguez',
-            lastName: 'Dela Rosa',
+            id: '',
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            suffix: ''
         },
     ];
 
@@ -42,19 +44,21 @@ function EmployeeTable({ employees = null }) {
                 <div key={emp.id} className='bg-gray-100 rounded-t rounded-lg w-full p-2 px-3 flex justify-between hover:bg-gray-200 cursor-pointer duration-300 transition-colors'>
                     <div className='flex gap-3'>
                         <div className=''>
-                            <p className='font-bold text-[15px]'>{`${emp.firstName} ${emp.middleName} ${emp.lastName}`}</p>
+                            <p className='font-bold text-[15px]'>{`${emp.firstName} ${emp.middleName} ${emp.lastName} ${emp.suffix}`}</p>
                             <div className='pl-0'>
                                 <p className='text-[13px] text-gray-500 font-bold'>First name: {emp.firstName}</p>
                                 <p className='text-[13px] text-gray-500 font-bold'>Middle Name: {emp.middleName}</p>
                                 <p className='text-[13px] text-gray-500 font-bold'>Last name: {emp.lastName}</p>
+                                <p className='text-[13px] text-gray-500 font-bold'>Suffix: {emp.suffix}</p>
                             </div>
                         </div>
                     </div>
 
                     <div className='flex flex-col gap-2'>
                         <p className='text-[12px] font-bold text-gray-500'>ID: {emp.id}</p>
-                        <div>
+                        <div className='flex flex-col gap-2'>
                             <UpdateEmployee employee={emp} onUpdated={loadEmployees} />
+                            <AddFamily employeeId={emp.id} onAdded={loadEmployees} />
                         </div>
                     </div>
                 </div>

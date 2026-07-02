@@ -6,6 +6,7 @@ function AddEmployee() {
         firstname: "",
         middlename: "",
         lastname: "",
+        suffix: "",
     });
 
     const handleChange = (e) => {
@@ -18,7 +19,7 @@ function AddEmployee() {
     const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!employee.firstname || !employee.middlename || !employee.lastname) {
+    if (!employee.firstname || !employee.middlename || !employee.lastname || !employee.suffix) {
         alert("All fields are required.");
         return;
     }
@@ -45,6 +46,7 @@ function AddEmployee() {
                 firstname: "",
                 middlename: "",
                 lastname: "",
+                suffix: "",
             });
 
             window.location.reload();
@@ -100,12 +102,31 @@ function AddEmployee() {
                     onChange={handleChange}
                 />
 
+                <p>Suffix</p>
+                <select
+                    className="mb-5 bg-gray-100 border-b border-gray-500 w-full p-3"
+                    placeholder="Enter Suffix..."
+                    name="suffix"
+                    value={employee.suffix}
+                    onChange={handleChange} >
+                
+                    <option className='text-gray-100' value="">Select Suffix</option>
+                    <option value="Jr.">Jr.</option>
+                    <option value="Sr.">Sr.</option>
+                    <option value="II">II</option>
+                    <option value="III">III</option>
+                    <option value="IV">IV</option>
+                    <option value="V">V</option>
+                </select>
                 <button
                     type="submit"
                     className="bg-blue-950 w-full h-[45px] hover:bg-blue-900 text-white font-bold rounded"
                 >
                     Submit
                 </button>
+                
+
+                
             </form>
         </div>
     );

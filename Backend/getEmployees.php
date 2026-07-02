@@ -5,7 +5,7 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include "db.php";
 
-$sql = "SELECT employeeid, firstname, middlename, lastname FROM Employees";
+$sql = "SELECT employeeid, firstname, middlename, lastname, suffix FROM Employees";
 $result = $conn->query($sql);
 
 $employees = [];
@@ -16,6 +16,7 @@ if ($result) {
             'firstName' => $row['firstname'],
             'middleName' => $row['middlename'],
             'lastName' => $row['lastname'],
+            'suffix' => $row['suffix'] 
         ];
     }
 }

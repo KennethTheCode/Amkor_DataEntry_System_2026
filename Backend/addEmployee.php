@@ -18,19 +18,21 @@ $employeeid = $data["employeeid"];
 $firstname = $data["firstname"];
 $middlename = $data["middlename"];
 $lastname = $data["lastname"];
+$suffix = $data["suffix"];
 
 $sql = "INSERT INTO Employees
-(employeeid, firstname, middlename, lastname)
-VALUES (?, ?, ?, ?)";
+(employeeid, firstname, middlename, lastname, suffix)
+VALUES (?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
 
 $stmt->bind_param(
-    "ssss",
+    "sssss",
     $employeeid,
     $firstname,
     $middlename,
-    $lastname
+    $lastname,
+    $suffix
 );
 
 if($stmt->execute()){

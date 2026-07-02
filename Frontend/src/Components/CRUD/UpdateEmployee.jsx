@@ -7,6 +7,7 @@ function UpdateEmployee({ employee, onUpdated }) {
         firstname: '',
         middlename: '',
         lastname: '',
+        suffix: '',
     });
 
     useEffect(() => {
@@ -16,6 +17,7 @@ function UpdateEmployee({ employee, onUpdated }) {
                 firstname: employee.firstName || '',
                 middlename: employee.middleName || '',
                 lastname: employee.lastName || '',
+                suffix: employee.suffix || '',
             });
         }
     }, [employee]);
@@ -58,7 +60,7 @@ function UpdateEmployee({ employee, onUpdated }) {
         <div>
             <button
                 onClick={() => setShowModal(true)}
-                className='bg-orange-500 w-[10vh] h-[3vh] hover:bg-orange-700 text-white font-bold rounded'
+                className='bg-blue-950 w-[10vh] h-[3vh] hover:bg-blue-900 text-white font-bold rounded'
             >
                 Edit
             </button>
@@ -70,7 +72,7 @@ function UpdateEmployee({ employee, onUpdated }) {
                 >
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        className='bg-white p-6 rounded shadow-lg w-[50vh] h-[60vh]'
+                        className='bg-white p-6 rounded shadow-lg w-[50vh] h-[70vh]'
                     >
                         <div className='flex justify-between items-center mb-4'>
                             <h2 className='text-lg font-bold'>Update Employee</h2>
@@ -118,6 +120,15 @@ function UpdateEmployee({ employee, onUpdated }) {
                                 placeholder='Enter Last Name...'
                                 name='lastname'
                                 value={formData.lastname}
+                                onChange={handleChange}
+                            />
+
+                            <p>Suffix</p>
+                            <input
+                                className='mb-5 bg-gray-100 border-b border-gray-500 w-full p-3'
+                                placeholder='Enter Suffix...'
+                                name='suffix'
+                                value={formData.suffix}
                                 onChange={handleChange}
                             />
 

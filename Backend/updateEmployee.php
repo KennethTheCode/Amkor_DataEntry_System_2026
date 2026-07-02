@@ -20,11 +20,12 @@ if (!$data) {
     exit;
 }
 
-$oldEmployeeId = $data["oldEmployeeId"] ?? $data["employeeid"] ?? "";
-$employeeid = $data["employeeid"] ?? "";
+$oldEmployeeId = (int)($data["oldEmployeeId"] ?? $data["employeeid"] ?? 0);
+$employeeid = (int)($data["employeeid"] ?? 0);
 $firstname = $data["firstname"] ?? "";
 $middlename = $data["middlename"] ?? "";
 $lastname = $data["lastname"] ?? "";
+$suffix = $data["suffix"] ?? "";
 
 if ($oldEmployeeId === "" || $employeeid === "") {
     http_response_code(400);
@@ -32,7 +33,7 @@ if ($oldEmployeeId === "" || $employeeid === "") {
     exit;
 }
 
-$sql = "UPDATE Employees SET employeeid = ?, firstname = ?, middlename = ?, lastname = ? WHERE employeeid = ?";
+$sql = "UPDATE Employees SET employeeid = ?, firstname = ?, middlename = ?, lastname = ?, suffix = ? WHERE employeeid = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
@@ -41,7 +42,7 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("sssss", $employeeid, $firstname, $middlename, $lastname, $oldEmployeeId);
+$stmt->bind_param("issssi", $employeeid, $firstname, $middlename, $lastname, $suffix, $oldEmployeeId);
 
 if ($stmt->execute()) {
     echo json_encode(["success" => true, "message" => "Employee updated successfully"]);
