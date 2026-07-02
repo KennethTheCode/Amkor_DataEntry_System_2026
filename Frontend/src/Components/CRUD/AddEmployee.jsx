@@ -18,12 +18,6 @@ function AddEmployee() {
     const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate Employee ID
-    if (!/^\d{10}$/.test(employee.employeeid)) {
-        alert("Employee ID must be exactly 10 digits.");
-        return;
-    }
-
     if (!employee.firstname || !employee.middlename || !employee.lastname) {
         alert("All fields are required.");
         return;
@@ -73,6 +67,8 @@ function AddEmployee() {
                     className="mb-5 bg-gray-100 border-b border-gray-500 w-full p-3"
                     placeholder="Enter Employee ID..."
                     name="employeeid"
+                    minLength={5}
+                    maxLength={5}
                     value={employee.employeeid}
                     onChange={handleChange}
                 />

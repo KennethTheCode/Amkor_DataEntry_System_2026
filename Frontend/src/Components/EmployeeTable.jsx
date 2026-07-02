@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import AmkorLogo from '../Images/amkorlogo.png'
+import UpdateEmployee from './CRUD/UpdateEmployee';
 
 function EmployeeTable({ employees = null }) {
     const [data, setData] = useState(Array.isArray(employees) ? employees : []);
@@ -16,18 +16,22 @@ function EmployeeTable({ employees = null }) {
     // Configure backend URL — adjust if your Apache serves the project under a different path
     const BACKEND_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_BACKEND_URL) || 'http://localhost/Amkor_DataEntry_System_2026/Backend/getEmployees.php';
 
-    useEffect(() => {
+    const loadEmployees = () => {
         if (Array.isArray(employees) && employees.length) {
             setData(employees);
             return;
         }
 
-        fetch(BACKEND_URL)
+        fetch(BACKEND_URL, { cache: 'no-store' })
             .then((res) => res.json())
             .then((json) => {
                 if (Array.isArray(json)) setData(json);
             })
             .catch((err) => console.error('Failed to fetch employees', err));
+    };
+
+    useEffect(() => {
+        loadEmployees();
     }, [employees]);
 
     const list = data.length ? data : sampleData;
@@ -50,9 +54,7 @@ function EmployeeTable({ employees = null }) {
                     <div className='flex flex-col gap-2'>
                         <p className='text-[12px] font-bold text-gray-500'>ID: {emp.id}</p>
                         <div>
-                            <button className='bg-orange-500 w-[10vh] h-[3vh] hover:bg-orange-700 text-white font-bold rounded'>
-                                Edit
-                            </button>
+                            <UpdateEmployee employee={emp} onUpdated={loadEmployees} />
                         </div>
                     </div>
                 </div>
