@@ -16,17 +16,33 @@ function AddEmployee() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        const response = await fetch("http://localhost/Amkor_DataEntry_System_2026/Backend/addEmployee.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(employee),
-        });
+    // Validate Employee ID
+    if (!/^\d{10}$/.test(employee.employeeid)) {
+        alert("Employee ID must be exactly 10 digits.");
+        return;
+    }
+
+    if (!employee.firstname || !employee.middlename || !employee.lastname) {
+        alert("All fields are required.");
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "http://localhost/Amkor_DataEntry_System_2026/Backend/addEmployee.php",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(employee),
+            }
+        );
 
         const data = await response.json();
+
         alert(data.message);
 
         if (data.success) {
@@ -36,8 +52,16 @@ function AddEmployee() {
                 middlename: "",
                 lastname: "",
             });
+
+            window.location.reload();
+        } else {
+            console.error("Failed to add employee:", data.message);
         }
-    };
+    } catch (error) {
+        console.error(error);
+        alert("Unable to connect to the server.");
+    }
+};
 
     return (
         <div className="bg-gray-200 rounded-xl shadow-xl h-[85vh] w-[55vh] p-4">
