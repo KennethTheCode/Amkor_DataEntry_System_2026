@@ -12,6 +12,7 @@ function AddFamily({ employee, onAdded }) {
         lastname: "",
         suffix: "",
         relationship: "",
+        status:"",
         contactno: "",
         address: "",
     });
@@ -66,11 +67,11 @@ function AddFamily({ employee, onAdded }) {
                     lastname: "",
                     suffix: "",
                     relationship: "",
+                    status:"",
                     contactno: "",
                     address: "",
                 });
 
-                // Reload family list
                 setRefresh((prev) => prev + 1);
 
                 onAdded?.();
@@ -125,8 +126,7 @@ function AddFamily({ employee, onAdded }) {
 
                         <form
                             onSubmit={handleSubmit}
-                            className="grid grid-cols-4 gap-4 mt-4"
-                        >
+                            className="grid grid-cols-4 gap-4 mt-4">
                             <div>
                                 <p>Relationship</p>
 
@@ -134,15 +134,27 @@ function AddFamily({ employee, onAdded }) {
                                     name="relationship"
                                     value={family.relationship}
                                     onChange={handleChange}
-                                    className="w-full border-b p-1"
-                                >
+                                    className="w-full border-b p-1">
                                     <option value="">Select</option>
                                     <option>Father</option>
                                     <option>Mother</option>
-                                    <option>Brother</option>
-                                    <option>Sister</option>
+                                    <option>Sibling</option>
                                     <option>Spouse</option>
                                     <option>Child</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <p>Status</p>
+
+                                <select
+                                    name="status"
+                                    value={family.status}
+                                    onChange={handleChange}
+                                    className="w-full border-b p-1">
+                                    <option value="">Select</option>
+                                    <option value="Deceased">Deceased</option>
+                                    <option value="Alive">Alive</option>
                                 </select>
                             </div>
 
@@ -222,7 +234,7 @@ function AddFamily({ employee, onAdded }) {
 
                             <button
                                 type="submit"
-                                className="bg-blue-950 text-white rounded"
+                                className="bg-blue-950 w-[125vh] py-3 text-white rounded hover:bg-blue-900 transition-colors duration-300"
                             >
                                 Save
                             </button>

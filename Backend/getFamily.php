@@ -15,6 +15,7 @@ $sql = "SELECT
             lastname,
             suffix,
             relationship,
+            status,
             contactno,
             address
         FROM RelatedDependents
@@ -37,6 +38,7 @@ while ($row = $result->fetch_assoc()) {
         "lastname" => $row["lastname"],
         "suffix" => $row["suffix"],
         "relationship" => $row["relationship"],
+        "status" => $row["status"],
         "contactno" => $row["contactno"],
         "address" => $row["address"]
     ];

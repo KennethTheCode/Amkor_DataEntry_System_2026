@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import DeleteFamily from "./DeleteFamily";
 
 function LoadFamily({ employeeId, refresh }) {
     const [data, setData] = useState([]);
@@ -40,6 +41,7 @@ function LoadFamily({ employeeId, refresh }) {
                     >
                         <div>
                             <p className="text-gray-500 text-[13px] font-bold">Relationship: {member.relationship}</p>
+                            <p className="text-gray-500 text-[13px] font-bold">Status: {member.status}</p>
                             <p className="text-gray-500 text-[13px] font-bold"> Contact: {member.contactno}</p>
                             <p className="text-gray-500 text-[13px] font-bold">Address: {member.address}</p>
                         </div>
@@ -54,6 +56,7 @@ function LoadFamily({ employeeId, refresh }) {
                         <button className="bg-blue-950 text-white rounded px-6 h-[5vh]">
                             Edit
                         </button>
+                        <DeleteFamily/>
                     </div>
                 ))
             )}

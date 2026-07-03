@@ -16,6 +16,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $employeeid = isset($data["employeeid"]) ? (int)$data["employeeid"] : 0;
 $relationship = $data["relationship"] ?? "";
+$status = $data["status"] ?? "";
 $firstname = $data["firstname"] ?? "";
 $middlename = $data["middlename"] ?? "";
 $lastname = $data["lastname"] ?? "";
@@ -24,15 +25,16 @@ $contactno = isset($data["contactno"]) && $data["contactno"] !== "" ? (int)$data
 $address = $data["address"] ?? "";
 
 $sql = "INSERT INTO RelatedDependents
-(employeeid, relationship, firstname, middlename, lastname, suffix, contactno, address)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+(employeeid, relationship, status, firstname, middlename, lastname, suffix, contactno, address)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
 
 $stmt->bind_param(
-    "isssssss",
+    "issssssss",
     $employeeid,
     $relationship,
+    $status,
     $firstname,
     $middlename,
     $lastname,
@@ -49,6 +51,6 @@ if($stmt->execute()){
 }else{
     echo json_encode([
         "success"=>false,
-        "message"=>"Failed to Add Employee: " . $stmt->error
+        "message"=>"Failed to Add Family: " . $stmt->error
     ]);
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import AmkorLogo from '../Images/amkorlogo.png'
 import SearchBar from './CRUD/SearchBar'
+import ExportData from './CRUD/ExportData'
 
 function DashboardNavBar() {
     return (
@@ -12,14 +13,20 @@ function DashboardNavBar() {
                 </div>
 
                 {/* Use Map Later on for profile pic and name */}
-                <div className='gap-3 w-[20vh] h-[5vh] flex items-ceter justify-center'>
-                    <div className='w-[15vh] h-full flex items-center justify-center'>
-                        <p className='text-black font-bold text-[13px]'>Welcome Back, c23-0154-209</p>
-                    </div>
-                    <div className='bg-green-300 w-[6vh] h-full rounded-full'></div>
+                <div className='flex items-center gap-5'>     
+                    <ExportData/>  
+                    <div className='gap-3 w-[20vh] h-[5vh] flex items-ceter justify-center'>
+                        <div className='w-[15vh] h-full flex items-center justify-center'>
+                            <p className='text-black font-bold text-[13px]'>Welcome Back, c23-0154-209</p>
+                        </div>
+                        <div className='bg-green-300 w-[6vh] h-full rounded-full'></div>
+                    </div>        
                 </div>
 
+
                 {/*  */}
+
+                
             </div>
             
         </div>

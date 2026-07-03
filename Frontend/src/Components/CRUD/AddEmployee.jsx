@@ -9,6 +9,7 @@ function AddEmployee() {
         suffix: "",
     });
 
+    
     const handleChange = (e) => {
         setEmployee({
             ...employee,
