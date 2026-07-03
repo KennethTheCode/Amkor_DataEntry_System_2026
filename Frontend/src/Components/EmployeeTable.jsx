@@ -1,70 +1,79 @@
 import React, { useEffect, useState } from 'react'
 import UpdateEmployee from './CRUD/UpdateEmployee';
 import AddFamily from './CRUD/AddFamily';
+import SearchBar from './CRUD/SearchBar';
 
 function EmployeeTable({ employees = null }) {
     const [data, setData] = useState(Array.isArray(employees) ? employees : []);
+    const [isSearching, setIsSearching] = useState(false);
 
-    const sampleData = [
-        {
-            id: '',
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            suffix: ''
-        },
-    ];
-
-    // Configure backend URL — adjust if your Apache serves the project under a different path
     const BACKEND_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_BACKEND_URL) || 'http://localhost/Amkor_DataEntry_System_2026/Backend/getEmployees.php';
 
     const loadEmployees = () => {
         if (Array.isArray(employees) && employees.length) {
             setData(employees);
+            setIsSearching(false);
             return;
         }
 
         fetch(BACKEND_URL, { cache: 'no-store' })
             .then((res) => res.json())
             .then((json) => {
-                if (Array.isArray(json)) setData(json);
+                if (Array.isArray(json)) {
+                    setData(json);
+                    setIsSearching(false);
+                }
             })
-            .catch((err) => console.error('Failed to fetch employees', err));
+            .catch((err) => {
+                console.error('Failed to fetch employees', err);
+                setIsSearching(false);
+            });
     };
 
     useEffect(() => {
         loadEmployees();
     }, [employees]);
 
-    const list = data.length ? data : sampleData;
-
     return (
         <div className='p-3 bg-white shadow-xl border border-gray-200 h-[85vh] w-[90%] rounded-r rounded-xl overflow-y-auto flex flex-col gap-3'>
-            {list.map((emp) => (
-                <div key={emp.id} className='bg-gray-100 rounded-t rounded-lg w-full p-2 px-3 flex justify-between hover:bg-gray-200 cursor-pointer duration-300 transition-colors'>
-                    <div className='flex gap-3'>
-                        <div className=''>
-                            <p className='font-bold text-[15px]'>{`${emp.firstName} ${emp.middleName} ${emp.lastName} ${emp.suffix}`}</p>
-                            <div className='pl-0'>
-                                <p className='text-[13px] text-gray-500 font-bold'>First name: {emp.firstName}</p>
-                                <p className='text-[13px] text-gray-500 font-bold'>Middle Name: {emp.middleName}</p>
-                                <p className='text-[13px] text-gray-500 font-bold'>Last name: {emp.lastName}</p>
-                                <p className='text-[13px] text-gray-500 font-bold'>Suffix: {emp.suffix}</p>
+            <SearchBar
+                onSearch={(results) => {
+                    setIsSearching(true);
+                    setData(Array.isArray(results) ? results : []);
+                }}
+            />
+
+            {data.length === 0 ? (
+                <div className='p-6 text-center text-sm text-gray-600'>
+                    {isSearching ? 'No employees matched your search.' : 'No employees available.'}
+                </div>
+            ) : (
+                data.map((emp) => (
+                    <div key={emp.id} className='bg-gray-100 rounded-t rounded-lg w-full p-2 px-3 flex justify-between hover:bg-gray-200 cursor-pointer duration-300 transition-colors'>
+                        <div className='flex gap-3'>
+                            <div>
+                                <p className='font-bold text-[15px]'>{`${emp.firstName} ${emp.middleName} ${emp.lastName} ${emp.suffix}`}</p>
+                                <div className='pl-0'>
+                                    <p className='text-[13px] text-gray-500 font-bold'>First name: {emp.firstName}</p>
+                                    <p className='text-[13px] text-gray-500 font-bold'>Middle Name: {emp.middleName}</p>
+                                    <p className='text-[13px] text-gray-500 font-bold'>Last name: {emp.lastName}</p>
+                                    <p className='text-[13px] text-gray-500 font-bold'>Suffix: {emp.suffix}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className='flex flex-col gap-2'>
+                            <p className='text-[12px] font-bold text-gray-500'>ID: {emp.id}</p>
+                            <div className='flex flex-col gap-2'>
+                                <UpdateEmployee employee={emp} onUpdated={loadEmployees} />
+                                <AddFamily employee={emp} onAdded={loadEmployees} />
                             </div>
                         </div>
                     </div>
-
-                    <div className='flex flex-col gap-2'>
-                        <p className='text-[12px] font-bold text-gray-500'>ID: {emp.id}</p>
-                        <div className='flex flex-col gap-2'>
-                            <UpdateEmployee employee={emp} onUpdated={loadEmployees} />
-                            <AddFamily employeeId={emp.id} onAdded={loadEmployees} />
-                        </div>
-                    </div>
-                </div>
-            ))}
+                ))
+            )}
         </div>
-    )
+    );
 }
 
 export default EmployeeTable

@@ -5,7 +5,9 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include "db.php";
 
-$sql = "SELECT employeeid, firstname, middlename, lastname, suffix FROM Employees";
+$sql = "SELECT employeeid, firstname, middlename, lastname, suffix 
+FROM Employees
+ORDER BY id DESC";
 $result = $conn->query($sql);
 
 $employees = [];

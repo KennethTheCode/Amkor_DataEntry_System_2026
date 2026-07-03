@@ -1,119 +1,238 @@
-import React from 'react';
-import { useState } from 'react';
-import LoadFamily from './LoadFamily';
+import React, { useState, useEffect } from "react";
+import LoadFamily from "./LoadFamily";
 
-function AddFamily({ employeeId, onAdded }) {
+function AddFamily({ employee, onAdded }) {
     const [showModal, setShowModal] = useState(false);
-            
+    const [refresh, setRefresh] = useState(0);
+
+    const [family, setFamily] = useState({
+        employeeid: employee?.id || "",
+        firstname: "",
+        middlename: "",
+        lastname: "",
+        suffix: "",
+        relationship: "",
+        contactno: "",
+        address: "",
+    });
+
+    useEffect(() => {
+        setFamily((prev) => ({
+            ...prev,
+            employeeid: employee?.id || "",
+        }));
+    }, [employee]);
+
+    const handleChange = (e) => {
+        setFamily({
+            ...family,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (
+            !family.relationship ||
+            !family.firstname ||
+            !family.lastname
+        ) {
+            alert("Relationship, First Name and Last Name are required.");
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                "http://localhost/Amkor_DataEntry_System_2026/Backend/addFamily.php",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(family),
+                }
+            );
+
+            const data = await response.json();
+
+            alert(data.message);
+
+            if (data.success) {
+                setFamily({
+                    employeeid: employee?.id || "",
+                    firstname: "",
+                    middlename: "",
+                    lastname: "",
+                    suffix: "",
+                    relationship: "",
+                    contactno: "",
+                    address: "",
+                });
+
+                // Reload family list
+                setRefresh((prev) => prev + 1);
+
+                onAdded?.();
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Unable to connect to the server.");
+        }
+    };
+
     return (
         <div>
-
-            <button onClick={() => setShowModal(true)}
-            className='bg-red-900 text-white rounded w-[10vh] hover:bg-red-950 transition-colors duration-300' >
+            <button
+                onClick={() => setShowModal(true)}
+                className="bg-red-900 text-white rounded w-[10vh] hover:bg-red-950"
+            >
                 +
             </button>
+
             {showModal && (
-                <div className='fixed inset-0 bg-black/20 flex items-center justify-center z-50'>
-                    <div className='bg-white p-6 rounded shadow-lg w-[130vh] h-[80vh]'>
-                        <div className='flex justify-between items-center mb-4'>
-                            <h2 className='text-lg font-bold'>Add Immediate Family Member</h2>
-                            <button onClick={() => setShowModal(false)} className='text-gray-500 hover:text-gray-700 border border-gray-300 rounded-full px-2'>
+                <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded shadow-lg w-[130vh] h-[80vh]">
+
+                        <div className="flex justify-between mb-4">
+                            <h2 className="font-bold text-lg">
+                                Add Immediate Family Member
+                            </h2>
+
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="border rounded-full px-2"
+                            >
                                 Close
                             </button>
                         </div>
-                        <div className='w-full h-[45vh] flex flex-col gap-1'>
-                            <div className='border border-gray-300 rounded  w-full flex justify-between px-5 py-1 items-center'>
-                                <p className='text-[13px] text-gray-400 font-bold'>Employee ID:12345</p>
-                                <p className='text-[13px] text-gray-400 font-bold'>First name: Paule Kenneth</p>                                                                
-                                <p className='text-[13px] text-gray-400 font-bold'>Middle Name: Dominguez</p>
-                                <p className='text-[13px] text-gray-400 font-bold'>Last Name: Dela Rosa</p>
-                            </div>
 
-                            {/* Family Member Data */}
-                            <div className='bg-gray-100 w-full h-full p-2 '>
-                                <div className='w-full h-[40vh] overflow-y-auto'>
-                                    <LoadFamily employeeId={employeeId} onAdded={onAdded} />
-                                </div>
-                            </div>
+                        <div className="border border-gray-300 rounded p-3 flex justify-between mb-2">
+                            <p className="text-gray-600 font-bold text-[14px]">Employee ID: {employee?.id}</p>
+                            <p className="text-gray-600 font-bold text-[14px]">First Name: {employee?.firstName}</p>
+                            <p className="text-gray-600 font-bold text-[14px]">Middle Name: {employee?.middleName}</p>
+                            <p className="text-gray-600 font-bold text-[14px]">Last Name: {employee?.lastName}</p>
                         </div>
 
-                        {/* Family Member Form */}
-                        <div className='w-full h-40 flex  items-center gap-3 '>
-                            <form className='grid grid-cols-4 gap-5'>
-                                <div className='flex flex-col text-gray-500'>
-                                    <p>Relationship</p>
-                                    <select
-                                        name="relationship"
-                                        className="bg-gray-100 border-b border-gray-500 w-[30vh] p-1">
-                                        <option className='text-gray-100' value="">Select Relationship</option>
-                                        <option value="Father">Father</option>
-                                        <option value="Mother">Mother</option>
-                                        <option value="Brother">Brother</option>
-                                        <option value="Sister">Sister</option>
-                                        <option value="Spouse">Spouse</option>
-                                        <option value="Child">Child</option>
-                                    </select>
-                                </div>
-                                <div className='flex flex-col'>
-                                    <p>First Name</p>
-                                    <input
-                                        className='mb-1 bg-gray-100 border-b border-gray-500 w-[30vh] p-1'
-                                        placeholder='Enter first name...'/>    
-                                </div>
-                                <div className='flex flex-col'>
-                                    <p>Middle Name</p>
-                                    <input
-                                        className='mb-1 bg-gray-100 border-b border-gray-500 w-[30vh] p-1'
-                                        placeholder='Enter middle name...'/>    
-                                </div>
-                                <div className='flex flex-col'>
-                                    <p>Last Name</p>
-                                    <input
-                                        className='mb-1 bg-gray-100 border-b border-gray-500 w-[30vh] p-1'
-                                        placeholder='Enter last name...'/>    
-                                </div>
-                                <div className="flex flex-col text-gray-500">
-                                <p className="text-black">Suffix</p>
+                        <div className="bg-gray-100 h-[40vh] overflow-y-auto p-2 rounded">
+
+                            <LoadFamily
+                                employeeId={employee?.id}
+                                refresh={refresh}
+                            />
+
+                        </div>
+
+                        <form
+                            onSubmit={handleSubmit}
+                            className="grid grid-cols-4 gap-4 mt-4"
+                        >
+                            <div>
+                                <p>Relationship</p>
+
+                                <select
+                                    name="relationship"
+                                    value={family.relationship}
+                                    onChange={handleChange}
+                                    className="w-full border-b p-1"
+                                >
+                                    <option value="">Select</option>
+                                    <option>Father</option>
+                                    <option>Mother</option>
+                                    <option>Brother</option>
+                                    <option>Sister</option>
+                                    <option>Spouse</option>
+                                    <option>Child</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <p>First Name</p>
+
+                                <input
+                                    name="firstname"
+                                    value={family.firstname}
+                                    onChange={handleChange}
+                                    className="w-full border-b p-1"
+                                />
+                            </div>
+
+                            <div>
+                                <p>Middle Name</p>
+
+                                <input
+                                    name="middlename"
+                                    value={family.middlename}
+                                    onChange={handleChange}
+                                    className="w-full border-b p-1"
+                                />
+                            </div>
+
+                            <div>
+                                <p>Last Name</p>
+
+                                <input
+                                    name="lastname"
+                                    value={family.lastname}
+                                    onChange={handleChange}
+                                    className="w-full border-b p-1"
+                                />
+                            </div>
+
+                            <div>
+                                <p>Suffix</p>
 
                                 <select
                                     name="suffix"
-                                    className="bg-gray-100 border-b border-gray-500 w-[30vh] p-1">
-                                    <option className='text-gray-100' value="">Select Suffix</option>
-                                    <option value="Jr.">Jr.</option>
-                                    <option value="Sr.">Sr.</option>
-                                    <option value="II">II</option>
-                                    <option value="III">III</option>
-                                    <option value="IV">IV</option>
-                                    <option value="V">V</option>
+                                    value={family.suffix}
+                                    onChange={handleChange}
+                                    className="w-full border-b p-1"
+                                >
+                                    <option value="">Select</option>
+                                    <option>Jr.</option>
+                                    <option>Sr.</option>
+                                    <option>II</option>
+                                    <option>III</option>
+                                    <option>IV</option>
+                                    <option>V</option>
                                 </select>
-                                </div>
-                                <div className='flex flex-col'>
-                                    <p>Contact No.</p>
-                                    <input
-                                        maxLength={11}
-                                        minLength={11}
-                                        className='mb-1 bg-gray-100 border-b border-gray-500 w-[30vh] p-1'
-                                        placeholder='Enter contact number...'/>   
-                                </div>
-                                <div className='flex w-[62vh] items-center  justify-center rounded gap-4'>
-                                    <div className='flex flex-col'>
-                                    <p>Address</p>
-                                    <input
-                                            className='mb-1 bg-gray-100 border-b border-gray-500 w-[30vh] p-1'
-                                            placeholder='Enter address...'/>    
-                                    </div>
-                                    <button className='bg-blue-950 w-full h-full hover:bg-blue-900 text-white font-bold rounded'>
-                                        Save
-                                    </button>
-                                </div>
-                                
-                            </form>
-                        </div>
+                            </div>
+
+                            <div>
+                                <p>Contact No.</p>
+
+                                <input
+                                    name="contactno"
+                                    value={family.contactno}
+                                    onChange={handleChange}
+                                    className="w-full border-b p-1"
+                                />
+                            </div>
+
+                            <div>
+                                <p>Address</p>
+
+                                <input
+                                    name="address"
+                                    value={family.address}
+                                    onChange={handleChange}
+                                    className="w-full border-b p-1"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="bg-blue-950 text-white rounded"
+                            >
+                                Save
+                            </button>
+                        </form>
+
                     </div>
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default AddFamily;
