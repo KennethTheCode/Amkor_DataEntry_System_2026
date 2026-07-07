@@ -5,17 +5,21 @@ header("Content-Type: application/json; charset=UTF-8");
 
 include "db.php";
 
-$sql = "SELECT employeeid, firstname, middlename, lastname FROM Employees";
+$sql = "SELECT employeeid, firstname, middlename, lastname, suffix 
+FROM Employees
+ORDER BY id DESC";
 $result = $conn->query($sql);
 
 $employees = [];
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         $employees[] = [
+            
             'id' => $row['employeeid'],
             'firstName' => $row['firstname'],
             'middleName' => $row['middlename'],
             'lastName' => $row['lastname'],
+            'suffix' => $row['suffix'] 
         ];
     }
 }
