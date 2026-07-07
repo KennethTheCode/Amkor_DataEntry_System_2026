@@ -91,8 +91,8 @@ function UpdateEmployee({ employee, onUpdated }) {
                                 placeholder='Enter Employee ID...'
                                 name='employeeid'
                                 value={formData.employeeid}
-                                minLength={5}
-                                maxLength={5}
+                                minLength={6}
+                                maxLength={6}
                                 onChange={handleChange}
                             />
 

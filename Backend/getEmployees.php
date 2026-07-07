@@ -14,6 +14,7 @@ $employees = [];
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         $employees[] = [
+            
             'id' => $row['employeeid'],
             'firstName' => $row['firstname'],
             'middleName' => $row['middlename'],

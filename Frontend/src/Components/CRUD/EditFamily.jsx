@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from "react";
-import LoadFamily from "./LoadFamily";
+import React, { useEffect, useState } from "react";
 
-function AddFamily({ employee, onAdded }) {
+function EditFamily({ member, onUpdated }) {
     const [showModal, setShowModal] = useState(false);
-    const [refresh, setRefresh] = useState(0);
 
     const [family, setFamily] = useState({
-        employeeid: employee?.id || "",
+        id: "",
+        relationship: "",
+        status: "",
         firstname: "",
         middlename: "",
         lastname: "",
         suffix: "",
-        relationship: "",
-        status:"",
         contactno: "",
-        address: "",
+        address: ""
     });
 
     useEffect(() => {
-        setFamily((prev) => ({
-            ...prev,
-            employeeid: employee?.id || "",
-        }));
-    }, [employee]);
+        if (member) {
+            setFamily(member);
+        }
+    }, [member]);
 
     const handleChange = (e) => {
         setFamily({
@@ -34,17 +31,9 @@ function AddFamily({ employee, onAdded }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (
-            !family.relationship ||
-            !family.firstname 
-        ) {
-            alert("Relationship, First Name and Last Name are required.");
-            return;
-        }
-
         try {
             const response = await fetch(
-                "http://localhost/Amkor_DataEntry_System_2026/Backend/addFamily.php",
+                "http://localhost/Amkor_DataEntry_System_2026/Backend/editFamily.php",
                 {
                     method: "POST",
                     headers: {
@@ -59,145 +48,138 @@ function AddFamily({ employee, onAdded }) {
             alert(data.message);
 
             if (data.success) {
-                setFamily({
-                    employeeid: employee?.id || "",
-                    firstname: "",
-                    middlename: "",
-                    lastname: "",
-                    suffix: "",
-                    relationship: "",
-                    status:"",
-                    contactno: "",
-                    address: "",
-                });
-
-                setRefresh((prev) => prev + 1);
-
-                onAdded?.();
+                setShowModal(false);
+                onUpdated?.();
             }
+
         } catch (error) {
             console.error(error);
-            alert("Unable to connect to the server.");
+            alert("Unable to connect.");
         }
     };
 
     return (
         <div>
+
             <button
                 onClick={() => setShowModal(true)}
-                className="bg-red-900 text-white rounded w-[10vh] hover:bg-red-950"
+                className="bg-blue-950 text-white rounded w-[10vh] h-[3vh] hover:bg-blue-800 duration-300 transition-colors cursor-pointer"
             >
-                +
+                Edit
             </button>
 
             {showModal && (
-                <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded shadow-lg w-[130vh] h-[80vh]">
 
-                        <div className="flex justify-between mb-4">
-                            <h2 className="font-bold text-lg">
-                                Add Immediate Family Member
-                            </h2>
+                <div className="bg-black/20 fixed inset-0 flex items-center justify-center">
+
+                    <div className="bg-white h-[29vh] w-[80vh] rounded shadow-lg p-3">
+
+                        <div className="h-[4vh] flex items-center justify-between border-b border-gray-400">
+
+                            <p className="text-[18px]">
+                                Edit Family Member
+                            </p>
 
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="border border-gray-500 text-gray-500 rounded-full px-2 hover:bg-gray-200 duration-300 transition-colors cursor-pointer"
+                                className="border rounded-full px-2"
                             >
                                 Close
                             </button>
-                        </div>
-
-                        <div className="border border-gray-300 rounded p-3 flex justify-between mb-2">
-                            <p className="text-gray-600 font-bold text-[14px]">Employee ID: {employee?.id}</p>
-                            <p className="text-gray-600 font-bold text-[14px]">First Name: {employee?.firstName}</p>
-                            <p className="text-gray-600 font-bold text-[14px]">Middle Name: {employee?.middleName}</p>
-                            <p className="text-gray-600 font-bold text-[14px]">Last Name: {employee?.lastName}</p>
-                        </div>
-
-                        <div className="bg-gray-100 h-[40vh] overflow-y-auto p-2 rounded">
-
-                            <LoadFamily
-                                employeeId={employee?.id}
-                                refresh={refresh}
-                            />
 
                         </div>
 
                         <form
                             onSubmit={handleSubmit}
-                            className="grid grid-cols-4 gap-4 mt-4">
+                            className="text-gray-500 py-5 grid grid-cols-4 gap-3"
+                        >
+
                             <div>
+
                                 <p>Relationship</p>
 
                                 <select
                                     name="relationship"
                                     value={family.relationship}
                                     onChange={handleChange}
-                                    className="w-full border-b p-1">
+                                    className="bg-gray-100 border-b p-1 w-[17vh]"
+                                >
                                     <option value="">Select</option>
                                     <option>Father</option>
                                     <option>Mother</option>
-                                    <option>Sibling</option>
+                                    <option>Brother</option>
+                                    <option>Sister</option>
                                     <option>Spouse</option>
                                     <option>Child</option>
                                 </select>
+
                             </div>
 
                             <div>
+
                                 <p>Status</p>
 
                                 <select
                                     name="status"
                                     value={family.status}
                                     onChange={handleChange}
-                                    className="w-full border-b p-1">
+                                    className="bg-gray-100 border-b p-1 w-[17vh]"
+                                >
                                     <option value="">Select</option>
-                                    <option value="Deceased">Deceased</option>
-                                    <option value="Alive">Alive</option>
+                                    <option>Alive</option>
+                                    <option>Deceased</option>
                                 </select>
+
                             </div>
 
                             <div>
+
                                 <p>First Name</p>
 
                                 <input
                                     name="firstname"
                                     value={family.firstname}
                                     onChange={handleChange}
-                                    className="w-full border-b p-1"
+                                    className="border-b w-[17vh] p-1 bg-gray-100"
                                 />
+
                             </div>
 
                             <div>
+
                                 <p>Middle Name</p>
 
                                 <input
                                     name="middlename"
                                     value={family.middlename}
                                     onChange={handleChange}
-                                    className="w-full border-b p-1"
+                                    className="border-b w-[17vh] p-1 bg-gray-100"
                                 />
+
                             </div>
 
                             <div>
+
                                 <p>Last Name</p>
 
                                 <input
                                     name="lastname"
                                     value={family.lastname}
                                     onChange={handleChange}
-                                    className="w-full border-b p-1"
+                                    className="border-b w-[17vh] p-1 bg-gray-100"
                                 />
+
                             </div>
 
                             <div>
+
                                 <p>Suffix</p>
 
                                 <select
                                     name="suffix"
                                     value={family.suffix}
                                     onChange={handleChange}
-                                    className="w-full border-b p-1"
+                                    className="bg-gray-100 border-b p-1 w-[17vh]"
                                 >
                                     <option value="">Select</option>
                                     <option>Jr.</option>
@@ -207,45 +189,52 @@ function AddFamily({ employee, onAdded }) {
                                     <option>IV</option>
                                     <option>V</option>
                                 </select>
+
                             </div>
 
                             <div>
+
                                 <p>Contact No.</p>
 
                                 <input
-                                    minLength={11}
-                                    maxLength={11}
                                     name="contactno"
                                     value={family.contactno}
                                     onChange={handleChange}
-                                    className="w-full border-b p-1"
+                                    className="border-b w-[17vh] p-1 bg-gray-100"
                                 />
+
                             </div>
 
                             <div>
+
                                 <p>Address</p>
 
                                 <input
                                     name="address"
                                     value={family.address}
                                     onChange={handleChange}
-                                    className="w-full border-b p-1"
+                                    className="border-b w-[17vh] p-1 bg-gray-100"
                                 />
+
                             </div>
 
                             <button
                                 type="submit"
-                                className="bg-blue-950 w-[125vh] py-3 text-white rounded hover:bg-blue-900 transition-colors duration-300 cursor-pointer"
+                                className="bg-blue-950 w-[76vh] py-3 text-white"
                             >
                                 Save
                             </button>
+
                         </form>
 
                     </div>
+
                 </div>
+
             )}
+
         </div>
     );
 }
 
-export default AddFamily;
+export default EditFamily;

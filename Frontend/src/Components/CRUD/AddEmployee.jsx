@@ -20,7 +20,7 @@ function AddEmployee() {
     const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!employee.firstname || !employee.middlename || !employee.lastname) {
+    if (!employee.firstname || !employee.lastname) {
         alert("All fields are required.");
         return;
     }

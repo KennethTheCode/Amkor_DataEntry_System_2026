@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DeleteFamily from "./DeleteFamily";
+import EditEmployee from "./EditFamily";
+import EditFamily from "./EditFamily";
 
 function LoadFamily({ employeeId, refresh }) {
     const [data, setData] = useState([]);
@@ -34,7 +36,7 @@ function LoadFamily({ employeeId, refresh }) {
                     No family members found.
                 </div>
             ) : (
-                data.map((member) => (
+                data.map((member, index) => (
                     <div
                         key={member.id}
                         className="bg-white rounded shadow-lg p-2 h-[11vh] flex justify-between items-center"
@@ -52,11 +54,19 @@ function LoadFamily({ employeeId, refresh }) {
                             <p className="text-gray-500 text-[13px] font-bold">Last Name: {member.lastname}</p>
                             <p className="text-gray-500 text-[13px] font-bold">Suffix: {member.suffix}</p>
                         </div>
-
-                        <button className="bg-blue-950 text-white rounded px-6 h-[5vh]">
-                            Edit
-                        </button>
-                        <DeleteFamily/>
+                        <div className="flex flex-col gap-1 font-bold text-[13px]">
+                            <EditFamily
+                                member={member}
+                                onUpdated={loadFamily}
+                            />
+                            <DeleteFamily
+                                member={member}
+                                onDeleted={(deletedId) => {
+                                    setData((current) => current.filter((m) => m.id !== deletedId));
+                                    loadFamily();
+                                }}
+                            />
+                        </div>
                     </div>
                 ))
             )}
